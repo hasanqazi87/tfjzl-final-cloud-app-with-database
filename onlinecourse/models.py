@@ -96,7 +96,7 @@ class Enrollment(models.Model):
 
 
 class Question(models.Model):
-    course = models.OneToOneField(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     content = models.TextField(max_length=200)
     grade = models.IntegerField(default=50)
 
@@ -108,7 +108,6 @@ class Question(models.Model):
         selected_correct = self.choice_set.filter(is_correct=True, id__in=selected_ids).count()
         return all_answers == selected_correct
 
-
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     content = models.TextField(max_length=200)
@@ -117,10 +116,6 @@ class Choice(models.Model):
     def __str__(self):
         return f'Choice: {self.content}'
 
-
-# One enrollment could have multiple submission
-# One submission could have multiple choices
-# One choice could belong to multiple submissions
 class Submission(models.Model):
    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
    choices = models.ManyToManyField(Choice)
